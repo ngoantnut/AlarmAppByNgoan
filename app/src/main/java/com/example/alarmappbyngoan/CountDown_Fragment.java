@@ -4,61 +4,45 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link CountDown_Fragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+
+
 public class CountDown_Fragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public CountDown_Fragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CountDown_Fragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static CountDown_Fragment newInstance(String param1, String param2) {
-        CountDown_Fragment fragment = new CountDown_Fragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+   TextView textView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_count_down_, container, false);
+        View rootView= inflater.inflate(R.layout.fragment_count_down_,container,false);
+        textView =(TextView) rootView.findViewById(R.id.cout_down_txt);
+        long duration = TimeUnit.MINUTES.toMillis(1);
+        new CountDownTimer(duration, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                String sDuration = String.format(Locale.ENGLISH, "%02d:%02d"
+                ,TimeUnit.MILLISECONDS.toMinutes(1)
+                ,TimeUnit.MILLISECONDS.toSeconds(1)- TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(1)));
+
+                textView.setText(sDuration);
+            }
+
+            @Override
+            public void onFinish() {
+                textView.setVisibility(View.GONE);
+                Toast.makeText(getActivity().getApplicationContext(), "End", Toast.LENGTH_LONG).show();
+            }
+        }.start();
+        return rootView;
     }
 }
